@@ -215,7 +215,7 @@ module.exports = class Bot {
 
             await this.page.goto(checkoutUrl, { waitUntil: 'domcontentloaded' });
         }
-
+        console.log('auto check out enabled?')
         // Submit checkout information
         if (config.autoCheckout.enabled) {
 
@@ -420,8 +420,9 @@ module.exports = class Bot {
                     logger.error(this.instance, `Error finding captcha: ${error}`)
                 } else if (captchas.length != 0) {
                     logger.info(this.instance, `Found captcha!`)
-                    resolve(captchas);
+                    return resolve(captchas);
                 }
+                return resolve(false); // missing code
             } catch (err) {
                 logger.error(this.instance, `Error finding captcha: ${err}`)
                 resolve(false);
@@ -586,7 +587,7 @@ module.exports = class Bot {
         }))
 
         // Catch error where shipping info was entered incorrectly
-        if (formData['dwfrm_payment_creditCard_owner'].includes("null")) {
+        if (formData['dwfrm_payment_creditCard_owner'] && formData['dwfrm_payment_creditCard_owner'].includes("null")) {
             logger.error(this.instance, "Invalid shipping info detected! Please continue manually");
             return false;
         }

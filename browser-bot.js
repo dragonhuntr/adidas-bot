@@ -252,21 +252,21 @@ module.exports = class Bot {
             }
 
             // Send bmak so that we don't get banned on ATC
-            const bmak = await this.page.evaluate(() => {
-                if (typeof bmak.startTracking != "function") return false;
-                bmak.startTracking();
-                return true;
-            });
-
-            // If calling the bmak function fails, manually trigger the function
-            if (!bmak) {
-                // Select the size dropdown
+            try {
+                const bmak = await this.page.evaluate(() => {
+                    if (typeof bmak.startTracking != "function") return false;
+                    bmak.startTracking();
+                    return true;
+                });
+            } catch (e) {
+                // If calling the bmak function fails, manually trigger the function
                 try {
                     await (await this.page.$x("//*[text() = 'Select size']"))[0].click();
                 } catch (err) {
                     // Not found
+                    logger.info(this.instance, 'Select size not found')
                 }
-            }
+            } 
 
             // If we are looking for captchas
             if (lookForCaptcha) {

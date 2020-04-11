@@ -215,7 +215,7 @@ module.exports = class Bot {
 
             await this.page.goto(checkoutUrl, { waitUntil: 'domcontentloaded' });
         }
-        console.log('auto check out enabled?')
+        
         // Submit checkout information
         if (config.autoCheckout.enabled) {
 
